@@ -1,0 +1,126 @@
+[
+  {
+    "id":"41",
+    "name":"23324234",
+    "permission":"rw",
+    "priority": "4"
+  },
+  {
+    "id":"81",
+    "name":"1234123",
+    "parent": {
+      "id": "2",
+      "name":"e8fb3165-58ff-4c8e-9324-bed4147ebd75",
+      "permission": "r"
+    },
+    "permission":"r"
+  },
+  {
+    "id": "124",
+    "name":"yhjn tt",
+    "parent": {
+      "id": "121",
+      "name":"sdafsdfsd",
+      "permission":"rw"
+    },
+    "permission":"r"
+  },
+  {
+    "id": "42",
+    "name":"1231",
+    "permission":"r"
+  },
+  {
+    "id": "122",
+    "name":"dfgsfdsgsdf",
+    "parent": {
+      "id": "121",
+      "name":"sdafsdfsd",
+      "permission":"rw"
+    },
+    "permission":"r"
+  },
+  {
+    "id": "123",
+    "name":"dfdsgf",
+    "parent": {
+      "id": "121",
+      "name":"sdafsdfsd",
+      "permission":"rw"
+    },
+    "permission":"r"
+  },
+  {
+    "id": "43",
+    "name":"fsfadfdsafds",
+    "parent": {
+      "id": "42",
+      "name":"1231",
+      "permission":"r"
+    },
+    "permission":"rw",
+    "priority": "2"
+  },
+  {
+    "id": "101",
+    "name":"gfdsgdfsgdf",
+    "parent": {
+      "id": "81",
+      "name":"1234123",
+      "permission":"r"
+    },
+    "permission":"r",
+    "priority": "1"
+  },
+  {
+    "id": "21",
+    "name":"string",
+    "permission":"r",
+    "priority": "0"
+  },
+  {
+    "id": "121",
+    "name":"sdafsdfsd",
+    "parent": {
+      "id": "1",
+      "name":"2a2ab87f-8cec-48f5-bcbb-8a139ecbf501",
+      "permission":"r"
+    },
+    "permission":"rw"
+  },
+  {
+    "id": "1",
+    "name":"2a2ab87f-8cec-48f5-bcbb-8a139ecbf501",
+    "permission":"r"
+  },
+  {
+    "id": "2",
+    "name":"e8fb3165-58ff-4c8e-9324-bed4147ebd75",
+    "parent": {
+      "id": "1",
+      "name":"2a2ab87f-8cec-48f5-bcbb-8a139ecbf501",
+      "permission":"r"
+    },"permission":"r"
+  },
+  {
+    "id": "61",
+    "name":"uyhkjh",
+    "parent": {
+      "id": "2",
+      "name":"e8fb3165-58ff-4c8e-9324-bed4147ebd75",
+      "permission":"r"
+    },
+    "permission":"r",
+    "priority": "1"
+  },
+  {
+    "id": "62",
+    "name":"uiyuyuiyui",
+    "parent": {
+      "id": "2",
+      "name":"e8fb3165-58ff-4c8e-9324-bed4147ebd75",
+      "permission":"r"
+    },
+    "permission":"rw"
+  }
+]
