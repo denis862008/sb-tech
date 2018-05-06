@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Node from './node';
 import './styles.css';
 
 class Tree extends React.Component {
@@ -22,7 +23,8 @@ class Tree extends React.Component {
                 item.level = this.setLevel({ items, item });
                 item.childCount = childProps.count;
                 item.childrenIDs = childProps.ids;
-                item.hidden = item.level !== 0;
+
+                if (item.childCount) item.hidden = true;
             });
 
             this.setState({ items });
@@ -73,50 +75,88 @@ class Tree extends React.Component {
 
         return level;
     }
-    handleRowClick(event) {
-        event.preventDefault();
-
+    handleRowClick(target) {
         const { items } = this.state;
-        let { target } = event;
-
-        while (!target.classList.contains('row_data-row')) {
-            target = target.parentNode;
-        }
-
         const id = target.id;
         const itemIdx = items.findIndex(itm => itm.id === id);
+        const { hidden, childrenIDs } = items[itemIdx];
 
-        if (items[itemIdx].childrenIDs.length) {
-            items[itemIdx].childrenIDs.map(childId => {
-                const childIdx = items.findIndex(subItm => subItm.id === childId);
-                items[childIdx].hidden = !items[childIdx].hidden;
-            });
+        if (typeof hidden !== 'undefined') {
+            items[itemIdx].hidden = !hidden;
 
-            this.setState({ items });
+            if (childrenIDs.length) this.recursiveClosure(items[itemIdx]);
         }
+        this.setState({ items });
     }
-    renderTree(item) {
-        if (!item.hidden) {
-            return (
-                <div
-                    key={item.id}
-                    className={`row row_data-row row_level-${item.level}`}
-                    onClick={this.handleRowClick.bind(this)}
-                    id={item.id}
-                >
-                    <div className='col-xs-6'><span className='name'>{ item.name }</span></div>
-                    <div className='col-xs-2'>{ item.id }</div>
-                    <div className='col-xs-2'>{ item.permission }</div>
-                    <div className='col-xs-2'>{ item.priority }</div>
-                </div>
-            );
-        }
+    recursiveClosure(item) {
+        const { items } = this.state;
+        const { childrenIDs } = item;
+
+        childrenIDs.map(childID => {
+            const childIdx = items.findIndex(itm => itm.id === childID);
+            const hasHidden = items[childIdx].hasOwnProperty('hidden');
+
+            if (hasHidden && items[childIdx].hidden === false) {
+                items[childIdx].hidden = !items[childIdx].hidden;
+                if (items[childIdx].childrenIDs.length) this.recursiveClosure(items[childIdx]);
+            }
+        });
+    }
+    renderTree() {
+        const { items } = this.state;
+        const itemsVisible = [];
+
+        let groupByLevel = items.reduce((acc, currentItem) => {
+            const { level, parent, hidden } = currentItem;
+
+            if (!acc[level]) acc[level] = [];
+            if (level === 0 && typeof parent === 'undefined') {
+                acc[level].push(currentItem);
+            }
+            if (hidden === false) {
+                currentItem.childrenIDs.map(childID => {
+                    const childIdx = items.findIndex(itm => itm.id === childID);
+                    const childLevel = items[childIdx].level;
+
+                    if (!acc[childLevel]) acc[childLevel] = [];
+                    acc[childLevel].push(items[childIdx]);
+                });
+            }
+
+            return acc;
+        }, {});
+
+        groupByLevel = Object.getOwnPropertyNames(groupByLevel).map(k => groupByLevel[k]);
+        groupByLevel.map((level, levelIdx) => {
+            level.map(node => {
+                if (levelIdx === 0) {
+                    itemsVisible.push(
+                        <Node
+                            onClick={this.handleRowClick.bind(this)}
+                            key={node.id} {...node}
+                        />
+                    );
+                }
+
+                if (levelIdx !== 0 && level.length) {
+                    let { id, parent: {id: parentId } } = node;
+                    const parentIdx = itemsVisible.findIndex(itm => itm.props.id === parentId) + 1;
+                    const reactNode = <Node
+                        onClick={this.handleRowClick.bind(this)}
+                        key={id} {...node}
+                    />;
+
+                    itemsVisible.splice(parentIdx, 0, reactNode);
+                }
+            });
+        });
+
+        return itemsVisible;
     }
     render() {
         const { items } = this.state;
 
-        console.log(items);
-        return(
+        return (
             <div className='container'>
                 <div className='row row_header'>
                     <div className='col-xs-6'>Group Name</div>
@@ -124,7 +164,7 @@ class Tree extends React.Component {
                     <div className='col-xs-2'>Permission</div>
                     <div className='col-xs-2'>Priority</div>
                 </div>
-                { items ? items.map(this.renderTree.bind(this)) : null }
+                { items ? this.renderTree() : null }
             </div>
         );
     }
